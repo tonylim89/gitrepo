@@ -1,0 +1,47 @@
+﻿@model Dictionary<int, List<ProjectDotNet.Models.Purchases>>
+
+@{
+    ViewData["Title"] = "Purchases";
+}
+
+<h1>My Purchase View</h1>
+
+<table class="table">
+    @foreach (var groupedPurchase in Model)
+    {
+        var firstPurchase = groupedPurchase.Value.First();
+        <tr class="purchase-history-tr">
+            <td class="purchase-history-td">
+                <div class="card-in-history">
+                    <img src="~/images/datadog.png" alt="datadog photo" class="view-history-img" />
+                    <h1>@firstPurchase.ProductName</h1>
+                    <p class="description">
+                        @firstPurchase.ProductDescription
+                    </p>
+                    <p><button>Download</button></p>
+                    <p>
+                        @if (groupedPurchase.Value.Count > 1)
+                        {
+                            <select>
+                                @foreach (var purchase in groupedPurchase.Value)
+                                {
+                                    <option value="@purchase.ActivationCode">@purchase.ActivationCode</option>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            @firstPurchase.ActivationCode
+                        }
+                    </p>
+                </div>
+            </td>
+            <td class="purchase-history-td">
+                <div class="item-details">
+                    <p>Purchased on:&nbsp <span id="hist-1-date">@firstPurchase.PurchaseDate.ToShortDateString()</span></p>
+                    <p>Quantity: &nbsp <span id="hist-1-qty">@groupedPurchase.Value.Count</span> </p>
+                </div>
+            </td>
+        </tr>
+    }
+</table>

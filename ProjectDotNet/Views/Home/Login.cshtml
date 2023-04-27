@@ -1,0 +1,93 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ProjectDotNet.Models.User
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+<div class="login-container">
+  <div class="login-header">
+    <h2>Welcome to ShoppingFreeShipping.pte</h2>
+        <div style="height: 20px;"></div>
+    <h3>Good to see you again!</h3>
+  </div>
+  <div class="login-form-container">
+    <div class="container">
+      <form id="login-form" class="login-form" method="post" action="/Home/Login">
+        <table>
+          <tr>
+            <td>Username</td>
+            <td><input type="text" name="username" id="username" /></td>
+          </tr>
+          <tr>
+            <td>Password</td>
+            <td><input type="password" name="password" id="password" /></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td style="text-align:right"><input type="submit" value="Login" /></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+    // 获取登录表单元素
+    var loginForm = document.getElementById("login-form");
+
+    // 添加事件侦听器
+    loginForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // 阻止默认表单提交行为
+
+        // 执行表单验证逻辑
+        if (!validateLoginForm()) {
+            return;
+        }
+
+        // 获取表单数据
+        var formData = new FormData(loginForm);
+        var username = formData.get("username");
+        var password = formData.get("password");
+
+        // 使用 AJAX 请求登录
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/Home/Login");
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    // 登录成功，重定向到 CheckOut 页面
+                    window.location.href = "/Home/CheckOut";
+                } else {
+                    // 登录失败，向用户显示错误消息
+                    alert("登录失败：" + response.message);
+                }
+            } else {
+                // 请求失败，向用户显示错误消息
+                alert("请求失败：" + xhr.statusText);
+            }
+        };
+        xhr.onerror = function () {
+            // 请求失败，向用户显示错误消息
+            alert("请求失败：" + xhr.statusText);
+        };
+        xhr.send(formData);
+    });
+
+    function validateLoginForm() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        if (username.trim() == "" || password.trim() == "") {
+            alert("Please enter your username and password.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
